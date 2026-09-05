@@ -259,6 +259,8 @@ body{
     color:var(--gold);
 
 }
+
+
 /* ==================================
    CONTAINERS
 ================================== */
@@ -459,6 +461,8 @@ body{
     line-height:1.9;
 
 }
+
+
 /* ==================================
    PROGRAMS SECTION
 ================================== */
@@ -617,62 +621,108 @@ body{
 ================================== */
 
 
-.stats-grid{
+/* Single statistics card */
 
-    display:grid;
+.stats-single-card{
 
-    grid-template-columns:
+    width:100%;
 
-    repeat(4,1fr);
+    max-width:750px;
 
-    gap:25px;
+    margin:auto;
 
-    text-align:center;
-
-}
-
-
-
-.stat-card{
-
-    background:
-
-    var(--green);
-
+    background:var(--green);
 
     color:white;
 
+    padding:60px 30px;
 
-    padding:35px 20px;
+    border-radius:30px;
 
-
-    border-radius:25px;
-
+    text-align:center;
 
     box-shadow:
 
-    0 10px 25px rgba(0,0,0,.15);
+    0 15px 35px rgba(0,0,0,.15);
 
+    transition:
 
-    transition:.3s;
+    transform .5s ease,
 
-}
-
-
-
-.stat-card:hover{
-
-    transform:translateY(-8px);
-
-    background:var(--dark-green);
+    box-shadow .5s ease;
 
 }
 
 
+/* Card pulse */
 
-.stat-card h2{
+.stats-single-card.pulse{
 
-    font-size:50px;
+    transform:scale(1.025);
+
+    box-shadow:
+
+    0 20px 45px rgba(0,0,0,.2);
+
+}
+
+
+/* Statistics content */
+
+.stat-content{
+
+    opacity:1;
+
+    transform:
+
+    translateY(0)
+
+    scale(1);
+
+    transition:
+
+    opacity .4s ease,
+
+    transform .4s ease;
+
+}
+
+
+/* Leaving statistic */
+
+.stat-content.leaving{
+
+    opacity:0;
+
+    transform:
+
+    translateY(-35px)
+
+    scale(.75);
+
+}
+
+
+/* Entering statistic */
+
+.stat-content.entering{
+
+    opacity:0;
+
+    transform:
+
+    translateY(35px)
+
+    scale(.75);
+
+}
+
+
+/* Number */
+
+.stats-single-card h2{
+
+    font-size:70px;
 
     color:var(--gold);
 
@@ -680,15 +730,22 @@ body{
 
     margin-bottom:10px;
 
+    line-height:1.2;
+
+}
+
+
+/* Label */
+
+.stats-single-card p{
+
+    font-size:25px;
+
+    line-height:1.5;
+
 }
 
 
-
-.stat-card p{
-
-    font-size:20px;
-
-}
 /* ==================================
    NEWS SECTION
 ================================== */
@@ -1089,6 +1146,8 @@ body{
     transform:translateY(-5px);
 
 }
+
+
 /* ==================================
    ANIMATIONS
 ================================== */
@@ -1328,6 +1387,29 @@ body{
     }
 
 
+    /* Statistics mobile */
+
+    .stats-single-card{
+
+        padding:45px 20px;
+
+    }
+
+
+    .stats-single-card h2{
+
+        font-size:55px;
+
+    }
+
+
+    .stats-single-card p{
+
+        font-size:21px;
+
+    }
+
+
 }
 
 
@@ -1364,6 +1446,8 @@ body{
 
 
 }
+
+
 /* ==========================
    COURSES PAGE
 ========================== */
@@ -1697,6 +1781,7 @@ border-radius:10px;
     font-size:22px;
 
 }
+
 .banquet-page .navbar a {
     color: #000 !important;
 }
