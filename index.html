@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -462,75 +461,19 @@
 
             <div class="container">
 
-                <div class="stats-grid">
+                <div class="stats-single-card" id="stats-card">
 
+                    <div class="stat-content" id="stat-content">
 
-                    <div class="stat-card">
-
-                        <h2
-                            class="counter"
-                            data-target="500"
-                        >
-                            0
+                        <h2 id="stat-number">
+                            0+
                         </h2>
 
-                        <p>
+                        <p id="stat-label">
                             مشارك
                         </p>
 
                     </div>
-
-
-
-                    <div class="stat-card">
-
-                        <h2
-                            class="counter"
-                            data-target="50"
-                        >
-                            0
-                        </h2>
-
-                        <p>
-                            برنامج
-                        </p>
-
-                    </div>
-
-
-
-                    <div class="stat-card">
-
-                        <h2
-                            class="counter"
-                            data-target="100"
-                        >
-                            0
-                        </h2>
-
-                        <p>
-                            فعالية
-                        </p>
-
-                    </div>
-
-
-
-                    <div class="stat-card">
-
-                        <h2
-                            class="counter"
-                            data-target="10"
-                        >
-                            0
-                        </h2>
-
-                        <p>
-                            سنوات من العطاء
-                        </p>
-
-                    </div>
-
 
                 </div>
 
@@ -976,77 +919,276 @@
 
     <script>
 
-        const counters = document.querySelectorAll(".counter");
+        const statistics = [
+
+            {
+                number: 500,
+                label: "مشارك"
+            },
+
+            {
+                number: 50,
+                label: "برنامج"
+            },
+
+            {
+                number: 100,
+                label: "فعالية"
+            },
+
+            {
+                number: 10,
+                label: "سنوات من العطاء"
+            }
+
+        ];
 
 
-        function animateCounter(counter) {
-
-            const target = Number(counter.dataset.target);
-
-            let current = 0;
-
-            const increment = Math.max(
-                1,
-                Math.ceil(target / 80)
-            );
+        const card =
+            document.getElementById("stats-card");
 
 
-            function update() {
+        const content =
+            document.getElementById("stat-content");
 
-                current += increment;
+
+        const numberElement =
+            document.getElementById("stat-number");
 
 
-                if (current >= target) {
+        const labelElement =
+            document.getElementById("stat-label");
 
-                    counter.textContent = target + "+";
 
-                } else {
+        let currentStat = 0;
 
-                    counter.textContent = current;
 
-                    requestAnimationFrame(update);
+        function countNumber(target) {
+
+            return new Promise(resolve => {
+
+                let startTime = null;
+
+                const duration = 1000;
+
+
+                function update(timestamp) {
+
+                    if (!startTime) {
+
+                        startTime = timestamp;
+
+                    }
+
+
+                    const progress =
+                        Math.min(
+                            (timestamp - startTime) /
+                            duration,
+                            1
+                        );
+
+
+                    const eased =
+                        1 -
+                        Math.pow(
+                            1 - progress,
+                            3
+                        );
+
+
+                    const current =
+                        Math.floor(
+                            target * eased
+                        );
+
+
+                    numberElement.textContent =
+                        current + "+";
+
+
+                    if (progress < 1) {
+
+                        requestAnimationFrame(update);
+
+                    }
+
+                    else {
+
+                        numberElement.textContent =
+                            target + "+";
+
+                        resolve();
+
+                    }
 
                 }
 
-            }
 
+                requestAnimationFrame(update);
 
-            update();
+            });
 
         }
 
 
+        async function showStatistic() {
 
-        const observer = new IntersectionObserver(
+            const stat =
+                statistics[currentStat];
 
-            (entries) => {
 
-                entries.forEach(entry => {
+            numberElement.textContent =
+                "0+";
 
-                    if (entry.isIntersecting) {
 
-                        animateCounter(entry.target);
+            labelElement.textContent =
+                stat.label;
 
-                        observer.unobserve(entry.target);
 
-                    }
+            content.classList.add(
+                "entering"
+            );
 
-                });
 
-            },
+            void content.offsetWidth;
 
-            {
-                threshold: 0.5
+
+            content.classList.remove(
+                "entering"
+            );
+
+
+            card.classList.add(
+                "pulse"
+            );
+
+
+            await countNumber(
+                stat.number
+            );
+
+
+            await new Promise(
+                resolve =>
+                    setTimeout(
+                        resolve,
+                        800
+                    )
+            );
+
+
+            content.classList.add(
+                "leaving"
+            );
+
+
+            card.classList.remove(
+                "pulse"
+            );
+
+
+            await new Promise(
+                resolve =>
+                    setTimeout(
+                        resolve,
+                        400
+                    )
+            );
+
+
+            currentStat++;
+
+
+            if (
+                currentStat >=
+                statistics.length
+            ) {
+
+                currentStat = 0;
+
             }
 
-        );
+
+            content.classList.remove(
+                "leaving"
+            );
 
 
-        counters.forEach(counter => {
+            content.classList.add(
+                "entering"
+            );
 
-            observer.observe(counter);
 
-        });
+            const nextStat =
+                statistics[currentStat];
+
+
+            numberElement.textContent =
+                "0+";
+
+
+            labelElement.textContent =
+                nextStat.label;
+
+
+            void content.offsetWidth;
+
+
+            content.classList.remove(
+                "entering"
+            );
+
+
+            card.classList.add(
+                "pulse"
+            );
+
+
+            await countNumber(
+                nextStat.number
+            );
+
+
+            setTimeout(
+                showStatistic,
+                800
+            );
+
+        }
+
+
+        const observer =
+            new IntersectionObserver(
+
+                entries => {
+
+                    entries.forEach(entry => {
+
+                        if (
+                            entry.isIntersecting
+                        ) {
+
+                            showStatistic();
+
+                            observer.unobserve(
+                                entry.target
+                            );
+
+                        }
+
+                    });
+
+                },
+
+                {
+                    threshold:0.5
+                }
+
+            );
+
+
+        observer.observe(card);
 
     </script>
 
@@ -1054,4 +1196,3 @@
 </body>
 
 </html>
-```
